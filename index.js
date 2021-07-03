@@ -58,7 +58,7 @@ module.exports = (api, options) => {
     return api.resolve(`${cordovaPath}/platforms/${platform}/${cordovaConfigPathToUpdate}`)
   }
 
-  const cordovaRun = (platform, target) => {
+  const cordovaRun = (platform, target, args) => {
     // cordova run platform
     info(`executing "cordova run ${platform}" in folder ${srcCordovaPath}`)
 
@@ -76,6 +76,14 @@ module.exports = (api, options) => {
         'run',
         platform
       ]
+    }
+
+    if (args.verbose) {
+      runCommands.push('--verbose')
+    }
+
+    if (args.nobuild) {
+      runCommands.push('--nobuild')
     }
 
     return spawn.sync('cordova', runCommands, {
@@ -200,7 +208,7 @@ module.exports = (api, options) => {
 
       cordovaClean(platform)
 
-      cordovaRun(platform, target)
+      cordovaRun(platform, target, args)
 
       return server
     } else {
